@@ -35,10 +35,13 @@ def get_module_name(filename, root: str = None):
     # find the module root - walk up the tree and check if it contains .py files - if yes. it is the new root
     directories = [(module_path, True)]
     if root is None:
-        while directories[0][0] != os.path.dirname(directories[0][0]):
-            potential_root = os.path.dirname(directories[0][0])
-            is_root = any([f == "__init__.py" for f in os.listdir(potential_root)])
-            directories.insert(0, (potential_root, is_root))
+        try: 
+            while directories[0][0] != os.path.dirname(directories[0][0]):
+                potential_root = os.path.dirname(directories[0][0])
+                is_root = any([f == "__init__.py" for f in os.listdir(potential_root)])
+                directories.insert(0, (potential_root, is_root))
+        except FileNotFoundError:
+            pass
 
         # keep directories where itself of parent is root
         while not directories[0][1]:
